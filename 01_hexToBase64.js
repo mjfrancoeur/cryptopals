@@ -1,4 +1,5 @@
 
+// Convert hex string into a binary string
 function hexToBin(hexStr) {
   let bin = '';
   let hexConverter = '0123456789abcdef'.split('');
@@ -16,7 +17,7 @@ function hexToBin(hexStr) {
   return binStr;
 }
 
-// Converts decimal to binary
+// Converts decimal (string) to binary (string)
 function toBinary(decStr) {
   let bin = 0;
   let decNum = Number(decStr);
@@ -41,6 +42,7 @@ function binToB64(binStr) {
   let arrOfDecs = fromBinToB64(arrOfBits);
 }
 
+// Converts an array of binary strings into an array of decimals
 function fromBinToB64(arrBin) {
   let ruler = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01223456789+/'.split('');
   return arrBin.map( (bin) {
