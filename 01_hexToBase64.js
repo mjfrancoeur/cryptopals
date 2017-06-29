@@ -1,3 +1,7 @@
+// Arrays used to index/convert decimal to B64 and hexadecimal
+const B64_RULER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'.split('');
+const HEX_RULER = '0123456789abcdef'.split('');
+
 // Convert hex string into a base-64 string
 function hexToB64(hex) {
   let bin = hexToBin(hex);
@@ -6,15 +10,13 @@ function hexToB64(hex) {
   return b64;
 }
 
-
 // Convert hex string into a binary string
 // Update function to take capitalized letters
 function hexToBin(hexStr) {
-  let hexConverter = '0123456789abcdef'.split('');
 
   // Convert hex string to an array of decimal strings
   let decArr = hexStr.split('').map( (el) => {
-    let dec = hexConverter.indexOf(el.toLowerCase());
+    let dec = HEX_RULER.indexOf(el.toLowerCase());
     if (dec === -1) {
       throw new RangeError(`${el} is not a hex digit`);
     }
@@ -58,11 +60,9 @@ function binToB64(binStr) {
 
 // Converts an array of binary strings into an array of base 64 strings
 function fromBinToB64(arrBin) {
-  let ruler = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01223456789+/'.split('');
   return arrBin.map( (bin) => {
-    // Function under construction
     let dec = fromBinToDec(bin);
-    return ruler[dec];
+    return B64_RULER[dec];
   });
 }
 
@@ -85,7 +85,7 @@ function divideIntoBits(str, numBits) {
   let bin = str.split('');
   let arrOfBits = [];
 
-  while (bin) {
+  while (bin.length) {
     let bits = bin.splice(0, numBits).join('');
     if (bits.length < numBits) {
       bits = padBinString(bits, numBits);
@@ -107,4 +107,4 @@ function padBinString(binStr, num) {
 }
 
 // test
-//console.log(hexToB64('f'));
+// console.log(hexToB64('49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d') === 'SSdtIGtpbGxpbmcgeW91ciBicmFpbiBsaWtlIGEgcG9pc29ub3VzIG11c2hyb29t');
