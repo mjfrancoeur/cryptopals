@@ -9,7 +9,7 @@ function hexToB64(hexStr) {
   let bytesArr = hexStringToBytes(hexStr);
 
   // Convert array of bytes into a b64 string
-  let b64str = bytesArrToB64Str(bytesArr);
+  let b64Str = bytesArrToB64Str(bytesArr);
 
   return b64Str;
 }
@@ -41,13 +41,15 @@ function bytesArrToB64Str(bytesArr) {
   let hexStr = '';
   // Grab three bytes at a time
   for (let i = 0; i < bytesArr.length; i += 3) {
-    hexStr += bytesToB64(bytesArr.slice(i, i + 3);
+    hexStr += bytesToB64(bytesArr.slice(i, i + 3));
   }
 
   // Leftovers
-  let leftoverBytes = bytesArr.slice(bytesArr.length  - (bytesArr.length % 3));
+  // let leftoverBytes = bytesArr.slice(bytesArr.length  - (bytesArr.length % 3));
   // Padding
-  let paddedLeftovers = padBytes(leftoverBytes, 3);
+  // let paddedLeftovers = padBytes(leftoverBytes, 3);
+
+  // hexStr += paddedLeftovers;
 
   return hexStr;
 }
@@ -56,13 +58,13 @@ function bytesArrToB64Str(bytesArr) {
 function bytesToB64(bytesArr) {
   let hexStr = '';
   // Take the first 6 bits
-  hexStr += b64_RULER[bytesArr[0] >> 2];
+  hexStr += B64_RULER[bytesArr[0] >> 2];
   // Take the second 6 bits
-  hexStr += b64_RULER[(bytesArr[0] & 3) + (bytesArr[1] >> 4)];
+  hexStr += B64_RULER[(bytesArr[0] & 3) + (bytesArr[1] >> 4)];
   // Take the next set of 6 bits
-  hexStr += b64_RULER[(bytesArr[1] & 15) + (bytesArr[2] >> 6)];
+  hexStr += B64_RULER[(bytesArr[1] & 15) + (bytesArr[2] >> 6)];
   // Take the final set of 6 bits
-  hexStr += b64_RULER[bytesArr[2] & 63];
+  hexStr += B64_RULER[bytesArr[2] & 63];
 
   return hexStr;
 }
@@ -70,9 +72,9 @@ function bytesToB64(bytesArr) {
 // Pad an array of bytes
 function padBytes(arr, numBytes) {
   let missingBytes = numBytes - arr.length;
-  return 
 }
 
+//
 // function hexStringtoBinaryNumber(hexStr) {
 //   // Convert hex string into a decimal string
 //   let decStr = hexStrToDecimalStr(hexStr);
