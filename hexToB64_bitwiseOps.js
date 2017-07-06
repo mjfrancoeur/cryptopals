@@ -1,6 +1,6 @@
 // Constants used to index / convert to and from hex and base 64
-const B64_RULER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
-const HEX_RULER = '0123456789abcdef';
+const B64_RULER = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'.split('');
+const HEX_RULER = '0123456789abcdef'.split('');
 
 // Convert hex string into a base-64 string
 function hexToB64(hexStr) {
@@ -19,8 +19,13 @@ function hexStringToBytes(hexStr) {
 
   let bytes = [];
   // Grab two hex digits at a time
-  for (let i = 0; i < hexStr.length; i += 2) {
+  for (let i = 0; i < hexStr.length - 1; i += 2) {
     bytes.push((hexStrToNum(hexStr[i]) << 4) + hexStrToNum(hexStr[i + 1]));
+  }
+
+  // if there is an odd number of hex chars, add the last char with padding
+  if (hexStr.length % 2) {
+    bytes.push(hexStrToNum(hexStr[hexStr.length - 1]) << 4);
   }
 
   return bytes;
@@ -44,68 +49,35 @@ function bytesArrToB64Str(bytesArr) {
     hexStr += bytesToB64(bytesArr.slice(i, i + 3));
   }
 
-  // Leftovers
-  // let leftoverBytes = bytesArr.slice(bytesArr.length  - (bytesArr.length % 3));
-  // Padding
-  // let paddedLeftovers = padBytes(leftoverBytes, 3);
-
-  // hexStr += paddedLeftovers;
-
   return hexStr;
 }
 
 // Takes an array of three bytes and returns a string of b64 digits
 function bytesToB64(bytesArr) {
   let hexStr = '';
-  // Take the first 6 bits
-  hexStr += B64_RULER[bytesArr[0] >> 2];
-  // Take the second 6 bits
-  hexStr += B64_RULER[(bytesArr[0] & 3) + (bytesArr[1] >> 4)];
-  // Take the next set of 6 bits
-  hexStr += B64_RULER[(bytesArr[1] & 15) + (bytesArr[2] >> 6)];
-  // Take the final set of 6 bits
-  hexStr += B64_RULER[bytesArr[2] & 63];
+
+  if (bytesArr.length === 3) {
+    // Take the first 6 bits
+    hexStr += B64_RULER[bytesArr[0] >> 2];
+    // Take the second 6 bits
+    hexStr += B64_RULER[(((bytesArr[0] & 3) << 4) + (bytesArr[1] >> 4))];
+    // Take the next set of 6 bits
+    hexStr += B64_RULER[(((bytesArr[1] & 15) << 2) + (bytesArr[2] >> 6))];
+    // Take the final set of 6 bits
+    hexStr += B64_RULER[bytesArr[2] & 63];
+  } else {
+    if (bytesArr.length === 1) {
+      hexStr += B64_RULER[bytesArr[0] >> 2];
+      hexStr += B64_RULER[(((bytesArr[0] & 3) << 4) + 0)];
+    } else if (bytesArr.length === 2) {
+      hexStr += B64_RULER[bytesArr[0] >> 2];
+      hexStr += B64_RULER[(((bytesArr[0] & 3) << 4) + (bytesArr[1] >> 4))];
+      hexStr += B64_RULER[(((bytesArr[1] & 15) << 2) + 0)];
+    }
+  }
 
   return hexStr;
 }
 
-// Pad an array of bytes
-function padBytes(arr, numBytes) {
-  let missingBytes = numBytes - arr.length;
-}
 
-//
-// function hexStringtoBinaryNumber(hexStr) {
-//   // Convert hex string into a decimal string
-//   let decStr = hexStrToDecimalStr(hexStr);
-//   // Convert decimal string into a binary number and return
-//   let binNum = decStrToBinaryNum(decStr);
-// 
-//   return binNum;
-// }
-// 
-// Converts hex string (string) into a string of decimals (string)
-// 
-// // Converts string of decimal numbers (string) into a single binary number (number)
-// function decStrToBinaryNum(decStr) {
-// 
-//   let bin = decStr.split('').reduce( (acc, curr) => {
-//     acc = acc << 4;
-//     return acc + decimalToBinary(Number(curr));
-//   }, 0);
-// }
-// 
-// // Converts a single decimal number (number) into a binary (number)
-// function decimalToBinary(decNum) {  
-//   let bin = 0;
-// 
-//   for (let i = 1; decNum; i *= 10) {
-//     let remainder = decNum % 2;
-//     decNum = Math.floor(decNum / 2);
-//     bin += remainder * i;
-//   }
-// 
-//   return bin;
-// }
-// 
-// console.log(hexStringtoBinaryNumber('f'))
+console.log(hexToB64('49276d206b696c6c696e6720796f757220627261696e206c696b65206120706f69736f6e6f7573206d757368726f6f6d'));
